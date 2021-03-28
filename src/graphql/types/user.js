@@ -1,5 +1,5 @@
 const models = require('../../models');
-const {signUp, sigIn} = require('../../utils/validator/validator');
+const {signUpValidator, sigInValidator} = require('../../utils/validator/validator');
 
 module.exports = class User {
 
@@ -18,7 +18,7 @@ module.exports = class User {
         return {
             Query: {
                 signIn: async (obj, args) => {
-                    const {result, error, messages} = await sigIn(args)
+                    const {result, error, messages} = await sigInValidator(args)
                     if (error) {
                         return { errorMessages: messages }
                     }
@@ -54,7 +54,7 @@ module.exports = class User {
             },
             Mutation: {
                 signUp: async (obj, args) => {
-                    const {result, error, messages} = await signUp(args);
+                    const {result, error, messages} = await signUpValidator(args);
                     if (error) {
                         return { errorMessages: messages }
                     }
