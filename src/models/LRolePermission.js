@@ -5,11 +5,10 @@ const {Model} = require('sequelize');
 module.exports = class LRolePermission extends Model {
     static init(sequelize, DataTypes) {
         return super.init({
-            roleId: {
+            role: {
                 allowNull: true,
                 primaryKey: true,
-                autoIncrement: true,
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING,
                 references: {
                     model: 'Roles'
                 },
@@ -18,7 +17,6 @@ module.exports = class LRolePermission extends Model {
             permissionId: {
                 allowNull: true,
                 primaryKey: true,
-                autoIncrement: true,
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'Permissions'
@@ -32,7 +30,7 @@ module.exports = class LRolePermission extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.Role,  {foreignKey: 'roleId'});
+        this.belongsTo(models.Role,  {foreignKey: 'role'});
         this.belongsTo(models.Permission, {foreignKey: 'permissionId'});
     }
 }

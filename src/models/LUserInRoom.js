@@ -5,10 +5,10 @@ const {Model} = require('sequelize');
 module.exports = class LUserInRoom extends Model {
     static init(sequelize, DataTypes) {
         return super.init({
-            roleId: {
+            role: {
                 allowNull: true,
                 primaryKey: true,
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING,
             },
             userId: {
                 allowNull: true,
@@ -27,7 +27,7 @@ module.exports = class LUserInRoom extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.Role, {foreignKey: 'roleId'});
+        this.belongsTo(models.Role, {foreignKey: 'role'});
         this.belongsTo(models.User, {foreignKey: 'userId'});
         this.belongsTo(models.Room, {foreignKey: 'roomId'});
     }

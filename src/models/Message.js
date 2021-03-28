@@ -56,8 +56,8 @@ module.exports = class Message extends Model {
 
     static associate(models) {
         this.belongsTo(models.User, {foreignKey: 'userId'});
-        this.belongsTo(models.Message, {foreignKey: 'parentId', as: 'parentMessage'});
-        this.hasMany(models.Message, {foreignKey: 'parentId', as: 'parentMessage'});
+        this.belongsTo(models.Message, {foreignKey: 'parentId', as: 'parentMessageFrom'});
+        this.hasMany(models.Message, {foreignKey: 'parentId', as: 'parentMessageTo'});
         this.belongsTo(models.Room, {foreignKey: 'roomId'});
     }
 }

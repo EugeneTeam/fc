@@ -14,6 +14,13 @@ module.exports = {
         type: Sequelize.STRING,
         unique: true
       },
+      email: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate: {
+          isEmail: true
+        }
+      },
       passwordHash: {
         type: Sequelize.STRING
       },
@@ -33,9 +40,9 @@ module.exports = {
       activationKey: {
         type: Sequelize.STRING
       },
-      roleId: {
+      role: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         references: {
           model: 'Roles'
         },

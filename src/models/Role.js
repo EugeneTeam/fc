@@ -8,33 +8,24 @@ module.exports = class Role extends Model {
             id: {
                 allowNull: true,
                 primaryKey: true,
-                autoIncrement: true,
-                type: DataTypes.INTEGER
+                type: DataTypes.STRING,
+                unique: true
             },
             name: {
                 allowNull: false,
                 type: DataTypes.STRING,
                 unique: true
-            },
-            createdAt: {
-                allowNull: false,
-                defaultValue: DataTypes.literal('CURRENT_TIMESTAMP'),
-                type: DataTypes.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                defaultValue: DataTypes.literal('CURRENT_TIMESTAMP'),
-                type: DataTypes.DATE
-            },
+            }
         }, {
-            sequelize
+            sequelize,
+            timestamps: false,
         })
     }
 
     static associate(models) {
-        this.hasMany(models.LRolePermission, {foreignKey: 'roleId'});
-        this.hasMany(models.User, {foreignKey: 'roleId'});
-        this.hasMany(models.LUserInRoom, {foreignKey: 'roleId'});
-        this.belongsToMany(models.Permission, {through: models.LRolePermission, foreignKey: 'roleId'});
+        this.hasMany(models.LRolePermission, {foreignKey: 'role'});
+        this.hasMany(models.User, {foreignKey: 'role'});
+        this.hasMany(models.LUserInRoom, {foreignKey: 'role'});
+        this.belongsToMany(models.Permission, {through: models.LRolePermission, foreignKey: 'role'});
     }
 }
