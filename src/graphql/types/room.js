@@ -1,5 +1,4 @@
 const models = require('../../models');
-const {Op} = require('sequelize');
 const {
     createRoomValidator,
     removeOrAddUserToTheRoom
@@ -13,7 +12,9 @@ module.exports = class Room {
             },
             Query: {
                 getListOfMyRoom: async (obj, args, context) => {
-                    const roomList = await models.Room.findAndCountAll({
+                    return models.Room.findAndCountAll({
+                        ...(args.limit ? {limit: args.limit} : null),
+                        ...(args.offset ? {offset: args.offset} : null),
                         include: {
                             required: true,
                             model: models.LUserInRoom,
@@ -22,7 +23,6 @@ module.exports = class Room {
                             }
                         }
                     });
-                    return roomList
                 },
             },
             Mutation: {
