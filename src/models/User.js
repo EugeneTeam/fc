@@ -54,13 +54,6 @@ module.exports = class User extends Model {
             activationKey: {
                 type: DataTypes.STRING
             },
-            role: {
-                allowNull: false,
-                type: DataTypes.STRING,
-                references: {
-                    model: 'Roles'
-                },
-            },
             createdAt: {
                 allowNull: false,
                 defaultValue: DataTypes.literal('CURRENT_TIMESTAMP'),
@@ -77,13 +70,61 @@ module.exports = class User extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.Role, {foreignKey: 'role'});
         this.hasMany(models.Complaint, {foreignKey: 'userId', as: 'userReport'});
         this.hasMany(models.Complaint, {foreignKey: 'targetId', as: 'userTarget'});
         this.hasMany(models.LUserInRoom, {foreignKey: 'userId'});
         this.hasMany(models.Room, {foreignKey: 'creatorId'});
         this.belongsToMany(models.Room, {through: models.LUserInRoom, foreignKey: 'userId'});
         this.hasMany(models.Message, {foreignKey: 'userId'});
+        this.hasMany(models.LUserRole, {foreignKey: 'userId'});
+        this.belongsToMany(models.Role, {through: models.LUserRole, foreignKey: 'userId'});
+    }
+
+    async isUserHavePermission(necessaryRights, currentUserRights) {
+        return currentUserRights.some(currentRight => {
+            return necessaryRights.includes(currentRight)
+        });
+    }
+
+    getPermissionList() {
+        const permissions = [];
+        this.LUserRoles.forEach(item => {
+            if (item.Role && item.Role.LRolePermissions) {
+                item.Role.LRolePermissions.forEach(permission => {
+                    permissions.push(permission.Permission.name);
+                });
+            }
+        });
+        return permissions
+    }
+
+    async isUserHaveRole(roleName) {
+        await this.sequelize.models.Role.checkRoleForExistence(roleName)
+        const role = await this.sequelize.models.LUserRole.findOne({
+            where: {
+                role: roleName,
+                userId: this.id
+            }
+        });
+        return Boolean(role)
+    }
+
+    async addRoleForUser(roleName) {
+        await this.sequelize.models.Role.checkRoleForExistence(roleName)
+        await this.sequelize.models.LUserRole.create({
+            role: roleName,
+            userId: this.id
+        });
+    }
+
+    async removeUserRole(roleName) {
+        await this.sequelize.models.Role.checkRoleForExistence(roleName)
+        await this.sequelize.models.LUserRole.destroy({
+            where: {
+                role: roleName,
+                userId: this.id
+            },
+        });
     }
 
     static checkTokenForExpirationDate(token) {

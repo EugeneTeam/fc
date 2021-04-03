@@ -69,7 +69,6 @@ module.exports = class User {
                     const newUser = await models.User.create({
                         nickname: result.nickname,
                         email: result.email,
-                        role: 'User',
                         // TODO change default user status
                         status: 'ACTIVE',
                         passwordHash: await models.User.encryptPassword(result.password),
@@ -77,6 +76,7 @@ module.exports = class User {
                         activationToken
                     })
 
+                    await newUser.addRoleForUser('User')
                     // TODO send a confirmation email
 
                     return { token: newUser.encodeToken() }
@@ -119,7 +119,7 @@ module.exports = class User {
 
     static mutationTypeDefs() {
         return `
-            signUp(email: String, password: String, passwordRepeat: String, nickname: String): ResponseUser 
+            signUp(email: String!, password: String!, passwordRepeat: String!, nickname: String!): ResponseUser 
         `;
     }
 }
