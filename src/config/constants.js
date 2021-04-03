@@ -3,5 +3,7 @@ module.exports = {
     AUTH_TOKEN_SIZE: 16,
     SALT_ROUNDS: 10,
     TOKEN_VALIDITY_PERIOD: '1d',
-    INCREASED_TOKEN_VALIDITY: '7d'
+    INCREASED_TOKEN_VALIDITY: '7d',
+    GRAPHQL_ENDPOINT: '/graphql',
+    GRAPHQL_SUBSCRIPTION_PATH: '/subscriptions'
 }

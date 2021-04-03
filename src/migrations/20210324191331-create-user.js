@@ -40,13 +40,6 @@ module.exports = {
       activationKey: {
         type: Sequelize.STRING
       },
-      role: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        references: {
-          model: 'Roles'
-        },
-      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

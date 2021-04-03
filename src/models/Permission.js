@@ -1,6 +1,7 @@
 'use strict';
 
 const {Model} = require('sequelize');
+const {ApolloError} = require('apollo-server-express');
 
 module.exports = class Permission extends Model {
     static init(sequelize, DataTypes) {

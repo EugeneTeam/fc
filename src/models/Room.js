@@ -1,7 +1,6 @@
 'use strict';
 
 const {Model} = require('sequelize');
-
 module.exports = class Room extends Model {
     static init(sequelize, DataTypes) {
         return super.init({
@@ -43,5 +42,22 @@ module.exports = class Room extends Model {
         this.hasMany(models.LUserInRoom, {foreignKey: 'roomId'});
         this.belongsToMany(models.User, {through: models.LUserInRoom, foreignKey: 'roomId'});
         this.hasMany(models.Message, {foreignKey: 'roomId'});
+    }
+
+    async addedUsersToTheRoom(userIds, transaction ) {
+        if (!userIds || !userIds.length) {
+            return;
+        }
+
+        for (const id of userIds) {
+            await this.sequelize.models.User.addRoleForUser('Room-member');
+            await this.sequelize.models.LUserInRoom.create({
+                role: 'Room-member',
+                userId: id,
+                roomId: this.id
+            }, {
+                transaction
+            })
+        }
     }
 }

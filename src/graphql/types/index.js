@@ -9,6 +9,7 @@ const resolvers = [];
 const typeDefs = [];
 const mutationTypeDefs = [];
 const queryTypeDefs = [];
+const subscriptionTypeDefs = [];
 
 fs
     .readdirSync(__dirname)
@@ -17,18 +18,11 @@ fs
     })
     .forEach(file => {
         const module = require(path.join(__dirname, file));
-        if (module.resolver !== undefined) {
-            resolvers.push(module.resolver());
-        }
-        if (module.typeDefs !== undefined) {
-            typeDefs.push(module.typeDefs())
-        }
-        if (module.mutationTypeDefs !== undefined) {
-            mutationTypeDefs.push(module.mutationTypeDefs())
-        }
-        if (module.queryTypeDefs !== undefined) {
-            queryTypeDefs.push(module.queryTypeDefs())
-        }
+        if (module.resolver !== undefined) { resolvers.push(module.resolver()) }
+        if (module.typeDefs !== undefined) { typeDefs.push(module.typeDefs()) }
+        if (module.mutationTypeDefs !== undefined) {mutationTypeDefs.push(module.mutationTypeDefs()) }
+        if (module.queryTypeDefs !== undefined) { queryTypeDefs.push(module.queryTypeDefs()) }
+        if (module.subscriptionTypeDefs !== undefined) { subscriptionTypeDefs.push(module.subscriptionTypeDefs()) }
     });
 
 module.exports = {
@@ -40,6 +34,9 @@ module.exports = {
         }
         type Mutation {
             ${mutationTypeDefs}
+        }
+        type Subscription {
+            ${subscriptionTypeDefs}
         }
     `)
 };

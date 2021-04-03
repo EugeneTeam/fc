@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('LUserInRooms', {
+    await queryInterface.createTable('LUserRoles', {
       role: {
         allowNull: true,
         primaryKey: true,
@@ -13,27 +13,18 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       userId: {
-        allowNull: true,
+        allowNull: false,
         primaryKey: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'Users'
         },
         onDelete: 'CASCADE'
-      },
-      roomId: {
-        allowNull: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Rooms'
-        },
-        onDelete: 'CASCADE'
-      },
+      }
     });
   },
 
   down: async queryInterface => {
-     await queryInterface.dropTable('LUserInRooms');
+     await queryInterface.dropTable('LUserRoles');
   }
 };

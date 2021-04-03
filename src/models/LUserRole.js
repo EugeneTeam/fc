@@ -2,7 +2,7 @@
 
 const {Model} = require('sequelize');
 
-module.exports = class LUserInRoom extends Model {
+module.exports = class LUserRole extends Model {
     static init(sequelize, DataTypes) {
         return super.init({
             role: {
@@ -15,23 +15,14 @@ module.exports = class LUserInRoom extends Model {
                 onDelete: 'CASCADE'
             },
             userId: {
-                allowNull: true,
+                allowNull: false,
                 primaryKey: true,
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'Users'
                 },
                 onDelete: 'CASCADE'
-            },
-            roomId: {
-                allowNull: true,
-                primaryKey: true,
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'Rooms'
-                },
-                onDelete: 'CASCADE'
-            },
+            }
         }, {
             sequelize,
             timestamps: false
@@ -41,6 +32,5 @@ module.exports = class LUserInRoom extends Model {
     static associate(models) {
         this.belongsTo(models.Role, {foreignKey: 'role'});
         this.belongsTo(models.User, {foreignKey: 'userId'});
-        this.belongsTo(models.Room, {foreignKey: 'roomId'});
     }
 }

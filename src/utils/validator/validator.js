@@ -22,6 +22,33 @@ const runValidation = (data, schema) => {
     })
 }
 
+const removeOrAddUserToTheRoom = data => {
+    const schema = Yup.object().shape({
+        roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
+        userId: Yup.number().positive('Invalid roomId').required('RoomId is required')
+    });
+
+    return runValidation(data, schema);
+}
+
+const sendMessageValidator = data => {
+    const schema = Yup.object().shape({
+        roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
+        message: Yup.string().required('UserIds is required')
+    });
+
+    return runValidation(data, schema);
+}
+
+const createRoomValidator = data => {
+    const schema = Yup.object().shape({
+        name: Yup.string().required('Room name is required'),
+        userIds:Yup.array().required('UserIds is required')
+    });
+
+    return runValidation(data, schema);
+}
+
 const createComplaintValidator = data => {
     const schema = Yup.object().shape({
         targetId: Yup.number().positive('Invalid targetId').required('TargetId is required'),
@@ -36,7 +63,7 @@ const sigInValidator = data => {
         email: Yup.string().email('Invalid email format').required('Email is required'),
         password: Yup.string().required('Password is required'),
         rememberMe: Yup.bool().oneOf([false, true], 'rememberMe is required')
-    })
+    });
 
     return runValidation(data, schema);
 }
@@ -77,5 +104,8 @@ const signUpValidator = data => {
 module.exports = {
     signUpValidator,
     sigInValidator,
-    createComplaintValidator
+    createComplaintValidator,
+    createRoomValidator,
+    sendMessageValidator,
+    removeOrAddUserToTheRoom
 }
