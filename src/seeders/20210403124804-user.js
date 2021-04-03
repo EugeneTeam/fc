@@ -17,8 +17,8 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date(),
         }, {
-            nickname: 'admin1',
-            email: 'test@test.com1',
+            nickname: 'user',
+            email: 'user@user.com',
             passwordHash: await models.User.encryptPassword('password'),
             authKey: null,
             resetKey: null,

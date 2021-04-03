@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('LGainsConstants', {
+    await queryInterface.createTable('LGainConstants', {
       characterTypeId: {
         allowNull: true,
         primaryKey: true,
@@ -27,6 +27,6 @@ module.exports = {
   },
 
   down: async queryInterface => {
-    await queryInterface.dropTable('LGainsConstants');
+    await queryInterface.dropTable('LGainConstants');
   }
 };
