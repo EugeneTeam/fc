@@ -22,6 +22,8 @@ module.exports = class ItemType extends Model {
     }
 
     static associate(models) {
-
+        this.hasMany(models.ItemSlot, {foreignKey: 'itemTypeId'});
+        this.hasMany(models.LAvailableItemType, {foreignKey: 'itemTypeId'});
+        this.belongsToMany(models.CharacterType, {through: models.LAvailableItemType, foreignKey: 'itemTypeId'});
     }
 }

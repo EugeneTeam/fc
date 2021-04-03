@@ -36,6 +36,8 @@ module.exports = class LPlayerSlot extends Model {
     }
 
     static associate(models) {
-
+        this.belongsTo(models.ItemSlot, {foreignKey: 'itemSlotId'});
+        this.belongsTo(models.Item, {foreignKey: 'itemId'});
+        this.belongsTo(models.Player, {foreignKey: 'playerId'});
     }
 }

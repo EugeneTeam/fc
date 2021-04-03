@@ -28,6 +28,7 @@ module.exports = class LAvailableItemType extends Model {
     }
 
     static associate(models) {
-
+        this.belongsTo(models.ItemType, {foreignKey: 'itemTypeId'});
+        this.belongsTo(models.CharacterType, {foreignKey: 'characterTypeId'});
     }
 }

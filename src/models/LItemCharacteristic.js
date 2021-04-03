@@ -28,6 +28,7 @@ module.exports = class LItemCharacteristic extends Model {
     }
 
     static associate(models) {
-
+        this.belongsTo(models.ItemCharacteristic, {foreignKey: 'itemCharacteristicId'});
+        this.belongsTo(models.Item, {foreignKey: 'itemId'});
     }
 }

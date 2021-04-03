@@ -13,7 +13,10 @@ module.exports = class ItemCharacteristic extends Model {
             },
             characteristicId: {
                 allowNull: false,
-                type: DataTypes.INTEGER
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Characteristics'
+                }
             },
             value: {
                 allowNull: false,
@@ -26,6 +29,8 @@ module.exports = class ItemCharacteristic extends Model {
     }
 
     static associate(models) {
-
+        this.belongsTo(models.Characteristic, {foreignKey: 'characteristicId'});
+        this.hasMany(models.LItemCharacteristic, {foreignKey: 'itemCharacteristicId'});
+        this.belongsToMany(models.Item, {through: models.LItemCharacteristic, foreignKey: 'itemCharacteristicId'});
     }
 }

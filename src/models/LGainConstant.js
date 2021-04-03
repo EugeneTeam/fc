@@ -32,6 +32,7 @@ module.exports = class LGainConstant extends Model {
     }
 
     static associate(models) {
-
+        this.belongsTo(models.CharacterType, {foreignKey: 'characterTypeId'});
+        this.belongsTo(models.Characteristic, {foreignKey: 'characteristicId'});
     }
 }

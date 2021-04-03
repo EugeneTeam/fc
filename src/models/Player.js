@@ -78,6 +78,7 @@ module.exports = class Player extends Model {
     }
 
     static associate(models) {
-
+        this.hasMany(models.LPlayerSlot, {foreignKey: 'playerId'});
+        this.belongsToMany(models.ItemSlot, {through: models.LPlayerSlot, foreignKey: 'playerId'});
     }
 }

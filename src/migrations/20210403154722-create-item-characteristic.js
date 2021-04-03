@@ -11,7 +11,10 @@ module.exports = {
       },
       characteristicId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Characteristics'
+        }
       },
       value: {
         allowNull: false,

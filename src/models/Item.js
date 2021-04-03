@@ -30,6 +30,8 @@ module.exports = class Item extends Model {
     }
 
     static associate(models) {
-
+        this.hasMany(models.LItemCharacteristic, {foreignKey: 'itemId'});
+        this.belongsToMany(models.ItemCharacteristic, {through: models.LItemCharacteristic, foreignKey: 'itemId'});
+        this.hasMany(models.LPlayerSlot, {foreignKey: 'itemId'});
     }
 }
