@@ -5,13 +5,12 @@ const {GRAPHQL_ENDPOINT, GRAPHQL_SUBSCRIPTION_PATH} = require('../config/constan
 const pubSubSingleton = require('./pubsub');
 const triggerNamesList = require('./subscriptionTriggersNames');
 const models = require('../models');
+// const {getMethodNameFromQueryString} = require('./gqlParser');
 
 const schema = makeExecutableSchema({
     resolvers,
     typeDefs
 })
-
-
 
 module.exports = {
     schema,
@@ -20,6 +19,7 @@ module.exports = {
         resolvers,
         formatError: error => error,
         context: async ({req, res}) => {
+            // const methodName = getMethodNameFromQueryString(req);
             let context = {
                 pubSub: pubSubSingleton.instance,
                 triggers: triggerNamesList,
@@ -49,6 +49,7 @@ module.exports = {
                 email: user.email,
                 status: user.status,
                 banReason: user.banReason,
+                isUserHaveRole: user.isUserHaveRole,
                 isUserHavePermission: user.isUserHavePermission,
                 permissions: user.getPermissionList()
             }

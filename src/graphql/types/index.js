@@ -29,6 +29,10 @@ module.exports = {
     resolvers: _.merge(...resolvers),
     typeDefs: gql(`
         ${typeDefs}
+        type Errors {
+            message: String
+            code: Int
+        }
         type Query {
             ${queryTypeDefs}
         }

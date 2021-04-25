@@ -1,5 +1,4 @@
 const Yup = require('yup');
-const {ApolloError} = require('apollo-server-express');
 
 const runValidation = (data, schema) => {
     return new Promise(resolve => {
@@ -20,6 +19,15 @@ const runValidation = (data, schema) => {
                 })
             })
     })
+}
+
+const validateCharacteristic = (data, {name = false, id = false}) => {
+    const schema = Yup.object().shape({
+        ...(name ? {name: Yup.string().required('Characteristic name is required')} : null),
+        ...(id ? {characteristicId: Yup.number().positive('Invalid id').required('Characteristic id is required')} : null),
+    });
+
+    return runValidation(data, schema);
 }
 
 const removeOrAddUserToTheRoom = data => {
@@ -107,5 +115,6 @@ module.exports = {
     createComplaintValidator,
     createRoomValidator,
     sendMessageValidator,
-    removeOrAddUserToTheRoom
+    removeOrAddUserToTheRoom,
+    validateCharacteristic
 }
