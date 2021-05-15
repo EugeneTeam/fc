@@ -15,9 +15,10 @@ getMethodName = body => gql`${body.query}`.definitions[0].selectionSet.selection
  *
  * @param {array} definitions
  * @param {object} variables
+ * @param {string} methodName
  * @returns {{}}
  */
-createVariableList = (definitions, variables) => {
+createVariableList = (definitions, variables, methodName) => {
     let result = {}
     if (!definitions || !definitions.length || !Object.keys(variables)) {
         return result
@@ -25,7 +26,7 @@ createVariableList = (definitions, variables) => {
     for (const definition of definitions) {
         if (definition.selectionSet && definition.selectionSet.selections && definition.selectionSet.selections.length) {
             for (const selection of definition.selectionSet.selections) {
-                if (selection.arguments && selection.arguments.length) {
+                if (selection.arguments && selection.arguments.length && selection.name.value === methodName) {
                     for (const argument of selection.arguments) {
                         result[argument.name.value] = variables[argument.value.name.value]
                     }
@@ -43,14 +44,14 @@ module.exports = {
      * @returns {string}
      */
     functionArgumentValidation: async ({body}) => {
-        const method = getMethodName(body)
-        const variables = createVariableList(gql`${body.query}`.definitions, body.variables)
-        const info = methodsList.find(item => item.methodName === method);
+        const methodName = getMethodName(body)
+        const variables = createVariableList(gql`${body.query}`.definitions, body.variables, methodName)
+        const info = methodsList.find(item => item.methodName === methodName);
         if (!info || (info && !info.validator)) {
-            return method
+            return methodName
         }
-        const {messages} = await info.validator(variables)
-        if (messages && messages.length) {
+        const {messages, error} = await info.validator(variables)
+        if (error && messages && messages.length) {
             throw new ApolloError('Validation Error', '400', {
                 'errors': messages.map(item => ({
                     code: 400,
@@ -58,7 +59,8 @@ module.exports = {
                 }))
             })
         }
-        return method
+
+        return methodName
     },
 
     /**

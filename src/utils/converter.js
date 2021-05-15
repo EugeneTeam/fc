@@ -1,13 +1,13 @@
 module.exports = {
 
-    transform: (response, ...error) => ({
+    transform: (response, ...errors) => ({
         data: response || null,
-        status: error.length ? 'FAILURE' : 'SUCCEEDED',
-        errors: error || []
+        status: errors && errors.length ? 'FAILURE' : 'SUCCEEDED',
+        errors: errors || []
     }),
 
-    reductionToOneFormat: (dataType, name) => `
-        type ${name} {
+    reductionToOneFormat: (dataType, returnTypeName) => `
+        type ${returnTypeName} {
             data: ${dataType}
             status: String
             errors: [Errors]

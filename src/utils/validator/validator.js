@@ -120,6 +120,15 @@ const characteristic = ({name = false, id = false}) => {
     }
 }
 
+const complaint = data => {
+    const schema = Yup.object().shape({
+        targetId: Yup.number().positive('Invalid targetId').required('TargetId is required'),
+        reason: Yup.string().required('Reason is required')
+    })
+
+    return runValidation(data, schema)
+}
+
 module.exports = {
     signUpValidator,
     sigInValidator,
@@ -129,4 +138,5 @@ module.exports = {
     sendMessageValidator,
     removeOrAddUserToTheRoom,
     characteristic,
+    complaint
 }

@@ -16,14 +16,25 @@ const schema = makeExecutableSchema({
     typeDefs
 })
 
+const selectError = error => {
+    if (error.exports && error.extensions.errors) {
+        return error.extensions.errors
+    }
+    return [{
+        code: 500,
+        message: error.message,
+        path: error.path
+    }]
+}
+
 module.exports = {
     schema,
     apollo: new ApolloServer({
         typeDefs,
         resolvers,
-
+        introspection: true,
         formatError: (error) => {
-            return transform(null, error.extensions.errors)
+            return transform(null, selectError(error))
         },
 
         context: async ({req, res}) => {

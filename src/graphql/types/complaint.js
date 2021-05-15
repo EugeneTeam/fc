@@ -1,31 +1,30 @@
-const {createComplaintValidator} = require('../../utils/validator/validator');
 const models = require('../../models');
+const {transform, reductionToOneFormat} = require('../../utils/converter')
 
 module.exports = class Complaint {
     static resolver() {
         return {
             Mutation: {
-                createComplaint: async (obj, args, context) => {
-                    const {result, error, messages} = await createComplaintValidator(args);
-                    if (error) {
-                        return { errorMessages: messages }
-                    }
-
-                    if (result.targetId === context.user.id) {
-                        return {
-                            errorMessages: ['You can\'t leave a complaint about yourself']
+                createComplaint: async (obj, {targetId, reason}, context) => {
+                    const complaint = await models.Complaint.findOne({
+                        where: {
+                            userId: context.user.id,
+                            targetId
                         }
+                    })
+                    if (complaint) {
+                        return transform(null, {
+                            code: 400,
+                            message: 'You have previously left a complaint about this player'
+                        })
                     }
 
-                    await models.Complaint.create({
+                    const newComplaint = await models.Complaint.create({
                         userId: context.user.id,
-                        targetId: result.targetId,
-                        reason: result.reason
+                        targetId: targetId,
+                        reason: reason
                     });
-
-                    return {
-                        response: 'SUCCESS'
-                    }
+                    return transform(newComplaint)
                 }
             }
         }
@@ -33,16 +32,18 @@ module.exports = class Complaint {
 
     static typeDefs() {
         return `
-            type CreateComplaintResponse{ 
-                response: String
-                errorMessages: [String]
+            type Complaint {
+                userId: Int
+                targetId: Int
+                reason: String
             }
+            ${reductionToOneFormat('Complaint','ComplaintResponse')}
         `
     }
 
     static mutationTypeDefs() {
         return `
-            createComplaint(targetId: Int!, reason: String!): CreateComplaintResponse
+            createComplaint(targetId: Int!, reason: String!): ComplaintResponse
         `
     }
 }
