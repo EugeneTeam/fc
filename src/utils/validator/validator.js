@@ -6,14 +6,12 @@ const runValidation = (data, schema) => {
             .validate(data, {abortEarly: false, stripUnknown: true})
             .then(response => {
                 resolve({
-                    result: response,
                     messages: null,
                     error: false
                 })
             })
             .catch(response => {
                 resolve({
-                    result: null,
                     error: true,
                     messages: response.errors
                 })
@@ -21,19 +19,10 @@ const runValidation = (data, schema) => {
     })
 }
 
-const validateCharacteristic = (data, {name = false, id = false}) => {
-    const schema = Yup.object().shape({
-        ...(name ? {name: Yup.string().required('Characteristic name is required')} : null),
-        ...(id ? {characteristicId: Yup.number().positive('Invalid id').required('Characteristic id is required')} : null),
-    });
-
-    return runValidation(data, schema);
-}
-
 const removeOrAddUserToTheRoom = data => {
     const schema = Yup.object().shape({
         roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
-        userId: Yup.number().positive('Invalid roomId').required('RoomId is required')
+        userId: Yup.number().positive('Invalid userId').required('UserId is required')
     });
 
     return runValidation(data, schema);
@@ -42,7 +31,7 @@ const removeOrAddUserToTheRoom = data => {
 const sendMessageValidator = data => {
     const schema = Yup.object().shape({
         roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
-        message: Yup.string().required('UserIds is required')
+        message: Yup.string().required('Messages is required')
     });
 
     return runValidation(data, schema);
@@ -77,7 +66,6 @@ const sigInValidator = data => {
 }
 
 const signUpValidator = data => {
-
     const signUpRegexLettersLowerCase = /[a-z]{1,30}/g;      //Password must contain at least 1 lowercase letter
     const signUpRegexLettersUpperCase = /[A-Z]{1,30}/g;      //Password must contain at least 1 uppercase letter
     const signUpRegexNumbers = /[\d]{1,30}/g;                //Password must contain at least 1 numeric character
@@ -109,12 +97,36 @@ const signUpValidator = data => {
     return runValidation(data, schema);
 }
 
+const characterType = ({id = false, name = false, description = false, imageUrl = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(id ? {id: Yup.number().positive('Invalid id').required('Id is required')} : null),
+            ...(name ? {name: Yup.string().required('Name is required')} : null),
+            ...(description ? {description: Yup.string().required('Description is required')} : null),
+            ...(imageUrl ? {imageUrl: Yup.string().required('ImageUrl is required')} : null)
+        });
+        return runValidation(data, schema);
+    }
+}
+
+const characteristic = ({name = false, id = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(name ? {name: Yup.string().required('Characteristic name is required')} : null),
+            ...(id ? {characteristicId: Yup.number().positive('Invalid id').required('Characteristic id is required')} : null),
+        });
+
+        return runValidation(data, schema);
+    }
+}
+
 module.exports = {
     signUpValidator,
     sigInValidator,
+    characterType,
     createComplaintValidator,
     createRoomValidator,
     sendMessageValidator,
     removeOrAddUserToTheRoom,
-    validateCharacteristic
+    characteristic,
 }

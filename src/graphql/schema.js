@@ -4,8 +4,12 @@ const {resolvers, typeDefs} = require('./types');
 const {GRAPHQL_ENDPOINT, GRAPHQL_SUBSCRIPTION_PATH} = require('../config/constants');
 const pubSubSingleton = require('./pubsub');
 const triggerNamesList = require('./subscriptionTriggersNames');
-const models = require('../models');
-// const {getMethodNameFromQueryString} = require('./gqlParser');
+const {
+    functionArgumentValidation,
+    checkUserAuthorization,
+    checkUserRights
+} = require('../utils/utils');
+const {transform} = require('../utils/converter')
 
 const schema = makeExecutableSchema({
     resolvers,
@@ -17,32 +21,22 @@ module.exports = {
     apollo: new ApolloServer({
         typeDefs,
         resolvers,
-        formatError: error => error,
+
+        formatError: (error) => {
+            return transform(null, error.extensions.errors)
+        },
+
         context: async ({req, res}) => {
-            // const methodName = getMethodNameFromQueryString(req);
             let context = {
                 pubSub: pubSubSingleton.instance,
                 triggers: triggerNamesList,
-                user: null
+                user: null,
             }
 
-            const user = await models.User.findOne({
-                where: {
-                    id: 1
-                },
-                include: {
-                    model: models.LUserRole,
-                    include: {
-                        model: models.Role,
-                        include: {
-                            model: models.LRolePermission,
-                            include: {
-                                model: models.Permission
-                            }
-                        }
-                    }
-                }
-            })
+            const methodName = await functionArgumentValidation(req)
+            const user = await checkUserAuthorization(req)
+            await checkUserRights(methodName, user)
+
             context.user = {
                 id: user.id,
                 nickname: user.nickname,

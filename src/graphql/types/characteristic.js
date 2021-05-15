@@ -1,6 +1,5 @@
-const {validateCharacteristic} = require('../../utils/validator/validator');
 const models = require('../../models');
-const {transform, reductionToOneFormat}  = require('../../utils/responseTransformer');
+const {transform, reductionToOneFormat}  = require('../../utils/converter');
 
 module.exports = class Characteristic {
     static resolver() {
@@ -13,8 +12,8 @@ module.exports = class Characteristic {
                     });
                     return transform(characteristics)
                 },
-                getCharacteristicById: async (obj, {characteristicId}) => {
-                    const characteristic = await models.Characteristic.findByPk(characteristicId);
+                getCharacteristicById: async (obj, {id}) => {
+                    const characteristic = await models.Characteristic.findByPk(id);
 
                     if (!characteristic) {
                         return transform(null, {
@@ -27,50 +26,34 @@ module.exports = class Characteristic {
                 }
             },
             Mutation: {
-                createCharacteristic: async (obj, args) => {
-                    const {result, error, messages} = await validateCharacteristic(args, {name: true});
-                    if (error) {
-                        return transform(null, ...messages.map(message => ({message, code: 400})));
-                    }
-
+                createCharacteristic: async (obj, {name}) => {
                     const existingCharacteristic = await models.Characteristic.findOne({
-                        where: {
-                            name: result.name
-                        }
+                        where: {name}
                     });
 
                     if (existingCharacteristic) {
-                        return transform(null, {message: 'This characteristic already exists', code: 400});
+                        return transform(null, {
+                            message: 'This characteristic already exists',
+                            code: 400
+                        });
                     }
 
-                    const newCharacteristic = await models.Characteristic.create(result);
+                    const newCharacteristic = await models.Characteristic.create({name});
                     return transform(newCharacteristic);
                 },
-                updateCharacteristic: async (obj, args) => {
-                    const {result, error, messages} = await validateCharacteristic(args, {name: true, id: true});
-                    if (error) {
-                        return transform(null, ...messages.map(message => ({message, code: 400})));
-                    }
-
-                    const existingCharacteristic = await models.Characteristic.findByPk(result.characteristicId);
+                updateCharacteristic: async (obj, {id, name}) => {
+                    const existingCharacteristic = await models.Characteristic.findByPk(id);
 
                     if (!existingCharacteristic) {
                         return transform(null, {message: 'Characteristic not found', code: 404});
                     }
 
-                    await existingCharacteristic.update({
-                        name: result.name
-                    });
+                    await existingCharacteristic.update({name});
 
-                    return transform(await models.Characteristic.findByPk(result.characteristicId))
+                    return transform(await models.Characteristic.findByPk(id))
                 },
-                removeCharacteristic: async (obj, args) => {
-                    const {result, error, messages} = await validateCharacteristic(args, {id: true});
-                    if (error) {
-                        return transform(null, ...messages.map(message => ({message, code: 400})));
-                    }
-
-                    const existingCharacteristic = await models.Characteristic.findByPk(result.characteristicId);
+                removeCharacteristic: async (obj, {id}) => {
+                    const existingCharacteristic = await models.Characteristic.findByPk(id);
 
                     if (!existingCharacteristic) {
                         return transform(null, {message: 'Characteristic not found', code: 404});
@@ -104,15 +87,15 @@ module.exports = class Characteristic {
     static queryTypeDefs() {
         return `
             getCharacteristicList(limit: Int, offset: Int): GetListOfCharacteristics
-            getCharacteristicById(characteristicId: Int!): CRUCharacteristic
+            getCharacteristicById(id: Int!): CRUCharacteristic
         `;
     }
 
     static mutationTypeDefs() {
         return `
             createCharacteristic(name: String!): CRUCharacteristic
-            updateCharacteristic(characteristicId: Int!, name: String!): CRUCharacteristic
-            removeCharacteristic(characteristicId: Int!): RemoveCharacteristic
+            updateCharacteristic(id: Int!, name: String!): CRUCharacteristic
+            removeCharacteristic(id: Int!): RemoveCharacteristic
         `;
     }
 }

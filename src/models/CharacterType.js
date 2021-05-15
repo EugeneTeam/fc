@@ -32,6 +32,8 @@ module.exports = class CharacterType extends Model {
     static associate(models) {
         this.hasMany(models.LAvailableItemType, {foreignKey: 'characterTypeId'});
         this.belongsToMany(models.ItemType, {through: models.LAvailableItemType, foreignKey: 'characterTypeId'});
+        this.hasMany(models.LGainConstant, {foreignKey: 'characterTypeId'});
+        this.belongsToMany(models.Characteristic, {through: models.LGainConstant, foreignKey: 'characterTypeId'});
         this.hasMany(models.LDefaultCharacteristic, {foreignKey: 'characterTypeId'});
         this.belongsToMany(models.Characteristic, {through: models.LDefaultCharacteristic, foreignKey: 'characterTypeId'});
     }

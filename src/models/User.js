@@ -1,5 +1,4 @@
 'use strict';
-
 const {Model} = require('sequelize');
 const randToken = require('rand-token');
 const {
@@ -9,6 +8,7 @@ const {
     INCREASED_TOKEN_VALIDITY,
     TOKEN_VALIDITY_PERIOD
 } = require('../config/constants.js')
+const {TOKEN} = require('../errors/errorsList')
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
@@ -117,32 +117,6 @@ module.exports = class User extends Model {
         });
     }
 
-    async removeUserRole(roleName) {
-        await this.sequelize.models.Role.checkRoleForExistence(roleName)
-        await this.sequelize.models.LUserRole.destroy({
-            where: {
-                role: roleName,
-                userId: this.id
-            },
-        });
-    }
-
-    static checkTokenForExpirationDate(token) {
-        if (!token) {
-            throw new ApolloError('Token is required', '400');
-        }
-
-        const partsOfTheToken = token.split('_');
-        if (partsOfTheToken.length < 2) {
-            throw new ApolloError('Invalid token', '400');
-        }
-
-        if (new Date() > new Date(Number(partsOfTheToken[1]))) {
-            throw new ApolloError('Token expired', '401');
-        }
-        return token;
-    }
-
     static generateLimitedTimeToken(millisecond = null) {
         return `${randToken.generate(16)}_${Date.now() + (millisecond ? millisecond : ACTIVATION_TOKEN_VALIDITY_PERIOD)}`;
     }
@@ -152,6 +126,17 @@ module.exports = class User extends Model {
             authToken: this.authToken,
             exp: moment().add(120, 'days').unix(),
         }, process.env.JWT_SECRET)
+    }
+
+    static decodeToken(token) {
+        const payload = jwt.decode(token, process.env.JWT_SECRET);
+        const now = moment().unix();
+        if (now > payload.exp) {
+            throw new ApolloError('Expired', TOKEN.EXPIRED.code.toString(), {
+                'errors': [TOKEN.EXPIRED]
+            })
+        }
+        return payload.authToken;
     }
 
     static generateAuthToken() {
