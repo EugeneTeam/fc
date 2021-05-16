@@ -129,6 +129,19 @@ const complaint = data => {
     return runValidation(data, schema)
 }
 
+const item = ({id = false, name = false, description = false, imageUrl = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(id ? {characteristicId: Yup.number().positive('Invalid id').required('Item id is required')} : null),
+            ...(name ? {name: Yup.string().required('Item name is required')} : null),
+            ...(description ? {description: Yup.string().required('Item description is required')} : null),
+            ...(imageUrl ? {imageUrl: Yup.string().required('Item imageUrl is required')} : null),
+        });
+
+        return runValidation(data, schema);
+    }
+}
+
 module.exports = {
     signUpValidator,
     sigInValidator,
@@ -138,5 +151,6 @@ module.exports = {
     sendMessageValidator,
     removeOrAddUserToTheRoom,
     characteristic,
-    complaint
+    complaint,
+    item
 }

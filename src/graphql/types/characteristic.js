@@ -78,15 +78,14 @@ module.exports = class Characteristic {
                 count: Int!
                 rows: [Characteristic]
             }
-            ${reductionToOneFormat('CharacteristicList', 'GetListOfCharacteristics')}
+            ${reductionToOneFormat('CharacteristicList', 'ListOfCharacteristics')}
             ${reductionToOneFormat('Characteristic', 'CRUCharacteristic')}
-            ${reductionToOneFormat('Characteristic', 'RemoveCharacteristic')}
         `;
     }
 
     static queryTypeDefs() {
         return `
-            getCharacteristicList(limit: Int, offset: Int): GetListOfCharacteristics
+            getCharacteristicList(limit: Int, offset: Int): ListOfCharacteristics
             getCharacteristicById(id: Int!): CRUCharacteristic
         `;
     }
@@ -95,7 +94,7 @@ module.exports = class Characteristic {
         return `
             createCharacteristic(name: String!): CRUCharacteristic
             updateCharacteristic(id: Int!, name: String!): CRUCharacteristic
-            removeCharacteristic(id: Int!): RemoveCharacteristic
+            removeCharacteristic(id: Int!): CRUCharacteristic
         `;
     }
 }
