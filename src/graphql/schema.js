@@ -17,7 +17,7 @@ const schema = makeExecutableSchema({
 })
 
 const selectError = error => {
-    if (error.exports && error.extensions.errors) {
+    if (error.extensions && error.extensions.errors) {
         return error.extensions.errors
     }
     return [{

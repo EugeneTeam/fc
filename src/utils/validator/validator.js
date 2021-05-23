@@ -132,13 +132,26 @@ const complaint = data => {
 const item = ({id = false, name = false, description = false, imageUrl = false}) => {
     return data => {
         const schema = Yup.object().shape({
-            ...(id ? {characteristicId: Yup.number().positive('Invalid id').required('Item id is required')} : null),
+            ...(id ? {id: Yup.number().positive('Invalid id').required('Item id is required')} : null),
             ...(name ? {name: Yup.string().required('Item name is required')} : null),
             ...(description ? {description: Yup.string().required('Item description is required')} : null),
             ...(imageUrl ? {imageUrl: Yup.string().required('Item imageUrl is required')} : null),
         });
 
         return runValidation(data, schema);
+    }
+}
+
+const itemCharacteristic = ({id = false, characteristicId = false, value = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(id ? {id: Yup.number().positive('Invalid id').required('Item characteristic id is required')} : null),
+            ...(characteristicId ? {characteristicId: Yup.number().positive('Invalid characteristicId').required('Characteristic id is required')} : null),
+            ...(value ? {value: Yup.number().positive('Invalid value').required('Value is required')} : null),
+
+        })
+
+        return runValidation(data, schema)
     }
 }
 
@@ -152,5 +165,6 @@ module.exports = {
     removeOrAddUserToTheRoom,
     characteristic,
     complaint,
-    item
+    item,
+    itemCharacteristic
 }

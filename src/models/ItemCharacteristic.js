@@ -20,7 +20,7 @@ module.exports = class ItemCharacteristic extends Model {
             },
             value: {
                 allowNull: false,
-                type: DataTypes.FLOAT
+                type: DataTypes.DECIMAL(10,2)
             }
         }, {
             sequelize,
