@@ -155,6 +155,19 @@ const itemCharacteristic = ({id = false, characteristicId = false, value = false
     }
 }
 
+const itemSlot = ({id = false, itemTypeId = false, imageUrl = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(id ? {id: Yup.number().positive('Invalid id').required('Item slot id is required')} : null),
+            ...(itemTypeId ? {itemTypeId: Yup.number().positive('Invalid itemTypeId').required('Item type id is required')} : null),
+            ...(imageUrl ? {imageUrl: Yup.string().required('Image url is required')} : null),
+
+        })
+
+        return runValidation(data, schema)
+    }
+}
+
 module.exports = {
     signUpValidator,
     sigInValidator,
@@ -166,5 +179,6 @@ module.exports = {
     characteristic,
     complaint,
     item,
-    itemCharacteristic
+    itemCharacteristic,
+    itemSlot
 }
