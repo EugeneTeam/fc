@@ -1,6 +1,10 @@
 const models = require('../../models');
 const {transform, reductionToOneFormat} = require('../../utils/converter')
 
+/**
+ * Возможность оставить жалобу на игрока
+ * Данный модуль доступен всем игрокам
+ */
 module.exports = class Complaint {
     static resolver() {
         return {

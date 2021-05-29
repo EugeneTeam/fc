@@ -1,6 +1,7 @@
 'use strict';
 
-const {Model} = require('sequelize');
+import {Model} from 'sequelize';
+
 module.exports = class Room extends Model {
     static init(sequelize, DataTypes) {
         return super.init({

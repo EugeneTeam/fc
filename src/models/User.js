@@ -1,18 +1,19 @@
 'use strict';
-const {Model} = require('sequelize');
-const randToken = require('rand-token');
-const {
+
+import {Model} from 'sequelize'
+import randToken from 'rand-token'
+import {
     ACTIVATION_TOKEN_VALIDITY_PERIOD,
     AUTH_TOKEN_SIZE,
     SALT_ROUNDS,
     INCREASED_TOKEN_VALIDITY,
     TOKEN_VALIDITY_PERIOD
-} = require('../config/constants.js')
-const {TOKEN} = require('../errors/errorsList')
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
-const {ApolloError} = require('apollo-server');
+} from '../config/constants.js'
+import {TOKEN} from '../errors/errorsList'
+import bcrypt from "bcrypt"
+import jwt from 'jsonwebtoken'
+import moment from 'moment'
+import {ApolloError} from 'apollo-server'
 
 module.exports = class User extends Model {
     static init(sequelize, DataTypes) {

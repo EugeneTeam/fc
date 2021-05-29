@@ -2,6 +2,10 @@ const {transform, reductionToOneFormat} = require('../../utils/converter')
 const models = require('../../models')
 const {Op} = require('sequelize')
 
+/**
+ * Тип характеристики и значений данной характеристики которые будут добавлены игроку при снаряжением данным предметом
+ * Данный модуль доступен только админу или по правам доступа
+ */
 module.exports = class ItemCharacteristic {
     static resolver() {
         return {
@@ -15,7 +19,10 @@ module.exports = class ItemCharacteristic {
                 getItemCharacteristicById: async (obj, {id}) => {
                     const itemCharacteristic = await models.ItemCharacteristic.findByPk(id)
                     if (!itemCharacteristic) {
-                        return transform(null, {code: 404, message: `ItemCharacteristic by ID ${id} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `ItemCharacteristic by ID ${id} not found`
+                        })
                     }
                     return transform(itemCharacteristic)
                 }
@@ -24,7 +31,10 @@ module.exports = class ItemCharacteristic {
                 createCharacteristicForAnItem: async (obj, {characteristicId, value}) => {
                     const characteristic = await models.Characteristic.findByPk(characteristicId)
                     if (!characteristic) {
-                        return transform(null, {code: 404, message: `Characteristic by ID ${characteristicId} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Characteristic by ID ${characteristicId} not found`
+                        })
                     }
 
                     const itemCharacteristic = await models.ItemCharacteristic.findOne({
@@ -36,7 +46,10 @@ module.exports = class ItemCharacteristic {
                         }
                     })
                     if (itemCharacteristic) {
-                        return transform(null, {code: 400, message: `The characteristic "${characteristic.name}" with a value of ${value} has already been created`})
+                        return transform(null, {
+                            code: 400,
+                            message: `The characteristic "${characteristic.name}" with a value of ${value} has already been created`
+                        })
                     }
 
                     const newItemCharacteristic = await models.ItemCharacteristic.create({
@@ -48,12 +61,18 @@ module.exports = class ItemCharacteristic {
                 updateCharacteristicForAnItem: async (obj, {id, characteristicId, value}) => {
                     const itemCharacteristic = await models.ItemCharacteristic.findByPk(id)
                     if (!itemCharacteristic) {
-                        return transform(null, {code: 404, message: `Item characteristic by ID ${id} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Item characteristic by ID ${id} not found`
+                        })
                     }
 
                     const characteristic = await models.Characteristic.findByPk(characteristicId)
                     if (!characteristic) {
-                        return transform(null, {code: 404, message: `Characteristic by ID ${characteristicId} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Characteristic by ID ${characteristicId} not found`
+                        })
                     }
 
                     const updatedItemCharacteristic = await itemCharacteristic.update({characteristicId, value})
@@ -63,7 +82,10 @@ module.exports = class ItemCharacteristic {
                 removeCharacteristicForAnItem: async (obj, {id}) => {
                     const itemCharacteristic = await models.ItemCharacteristic.findByPk(id)
                     if (!itemCharacteristic) {
-                        return transform(null, {code: 404, message: `Item characteristic by ID ${id} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Item characteristic by ID ${id} not found`
+                        })
                     }
 
                     const removedItemCharacteristic = await itemCharacteristic.destroy()

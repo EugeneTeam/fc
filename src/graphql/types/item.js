@@ -1,7 +1,10 @@
 const {reductionToOneFormat, transform} = require('../../utils/converter')
 const models = require('../../models')
 const {Op} = require('sequelize')
-
+/**
+ * Предметы доступные игрокам
+ * Данный модуль доступен только админу или по правам доступа
+ */
 module.exports = class Item {
     static resolver() {
         return {

@@ -1,6 +1,6 @@
-const Yup = require('yup');
+import Yup from 'yup';
 
-const runValidation = (data, schema) => {
+export const runValidation = (data, schema) => {
     return new Promise(resolve => {
         schema
             .validate(data, {abortEarly: false, stripUnknown: true})
@@ -19,7 +19,7 @@ const runValidation = (data, schema) => {
     })
 }
 
-const removeOrAddUserToTheRoom = data => {
+export const removeOrAddUserToTheRoom = data => {
     const schema = Yup.object().shape({
         roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
         userId: Yup.number().positive('Invalid userId').required('UserId is required')
@@ -28,7 +28,7 @@ const removeOrAddUserToTheRoom = data => {
     return runValidation(data, schema);
 }
 
-const sendMessageValidator = data => {
+export const sendMessageValidator = data => {
     const schema = Yup.object().shape({
         roomId: Yup.number().positive('Invalid roomId').required('RoomId is required'),
         message: Yup.string().required('Messages is required')
@@ -37,7 +37,7 @@ const sendMessageValidator = data => {
     return runValidation(data, schema);
 }
 
-const createRoomValidator = data => {
+export const createRoomValidator = data => {
     const schema = Yup.object().shape({
         name: Yup.string().required('Room name is required'),
         userIds:Yup.array().required('UserIds is required')
@@ -46,7 +46,7 @@ const createRoomValidator = data => {
     return runValidation(data, schema);
 }
 
-const createComplaintValidator = data => {
+export const createComplaintValidator = data => {
     const schema = Yup.object().shape({
         targetId: Yup.number().positive('Invalid targetId').required('TargetId is required'),
         reason: Yup.string().required('Reason is required')
@@ -55,7 +55,7 @@ const createComplaintValidator = data => {
     return runValidation(data, schema);
 }
 
-const sigInValidator = data => {
+export const sigInValidator = data => {
     const schema = Yup.object().shape({
         email: Yup.string().email('Invalid email format').required('Email is required'),
         password: Yup.string().required('Password is required'),
@@ -65,7 +65,7 @@ const sigInValidator = data => {
     return runValidation(data, schema);
 }
 
-const signUpValidator = data => {
+export const signUpValidator = data => {
     const signUpRegexLettersLowerCase = /[a-z]{1,30}/g;      //Password must contain at least 1 lowercase letter
     const signUpRegexLettersUpperCase = /[A-Z]{1,30}/g;      //Password must contain at least 1 uppercase letter
     const signUpRegexNumbers = /[\d]{1,30}/g;                //Password must contain at least 1 numeric character
@@ -97,7 +97,7 @@ const signUpValidator = data => {
     return runValidation(data, schema);
 }
 
-const characterType = ({id = false, name = false, description = false, imageUrl = false}) => {
+export const characterType = ({id = false, name = false, description = false, imageUrl = false}) => {
     return data => {
         const schema = Yup.object().shape({
             ...(id ? {id: Yup.number().positive('Invalid id').required('Id is required')} : null),
@@ -109,7 +109,7 @@ const characterType = ({id = false, name = false, description = false, imageUrl 
     }
 }
 
-const characteristic = ({name = false, id = false}) => {
+export const characteristic = ({name = false, id = false}) => {
     return data => {
         const schema = Yup.object().shape({
             ...(name ? {name: Yup.string().required('Characteristic name is required')} : null),
@@ -120,7 +120,7 @@ const characteristic = ({name = false, id = false}) => {
     }
 }
 
-const complaint = data => {
+export const complaint = data => {
     const schema = Yup.object().shape({
         targetId: Yup.number().positive('Invalid targetId').required('TargetId is required'),
         reason: Yup.string().required('Reason is required')
@@ -129,7 +129,7 @@ const complaint = data => {
     return runValidation(data, schema)
 }
 
-const item = ({id = false, name = false, description = false, imageUrl = false}) => {
+export const item = ({id = false, name = false, description = false, imageUrl = false}) => {
     return data => {
         const schema = Yup.object().shape({
             ...(id ? {id: Yup.number().positive('Invalid id').required('Item id is required')} : null),
@@ -142,7 +142,7 @@ const item = ({id = false, name = false, description = false, imageUrl = false})
     }
 }
 
-const itemCharacteristic = ({id = false, characteristicId = false, value = false}) => {
+export const itemCharacteristic = ({id = false, characteristicId = false, value = false}) => {
     return data => {
         const schema = Yup.object().shape({
             ...(id ? {id: Yup.number().positive('Invalid id').required('Item characteristic id is required')} : null),
@@ -155,7 +155,7 @@ const itemCharacteristic = ({id = false, characteristicId = false, value = false
     }
 }
 
-const itemSlot = ({id = false, itemTypeId = false, imageUrl = false}) => {
+export const itemSlot = ({id = false, itemTypeId = false, imageUrl = false}) => {
     return data => {
         const schema = Yup.object().shape({
             ...(id ? {id: Yup.number().positive('Invalid id').required('Item slot id is required')} : null),
@@ -168,17 +168,12 @@ const itemSlot = ({id = false, itemTypeId = false, imageUrl = false}) => {
     }
 }
 
-module.exports = {
-    signUpValidator,
-    sigInValidator,
-    characterType,
-    createComplaintValidator,
-    createRoomValidator,
-    sendMessageValidator,
-    removeOrAddUserToTheRoom,
-    characteristic,
-    complaint,
-    item,
-    itemCharacteristic,
-    itemSlot
+export const itemType = ({id = false, name = false}) => {
+    return data => {
+        const schema = Yup.object().shape({
+            ...(id ? {id} : null),
+            ...(name ? {name} : null)
+        })
+        return runValidation(data, schema)
+    }
 }

@@ -1,18 +1,17 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const basename = path.basename(__filename);
+import CharacterType from './characterType'
+import Characteristic from './characteristic'
+import Complaint from './complaint'
+import Item from './item'
+import ItemCharacteristic from './itemCharacteristic'
+import ItemSlot from './itemSlot'
+import ItemType from './itemType'
 
-const result = [];
-
-fs
-    .readdirSync(__dirname)
-    .filter(file => {
-        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-    })
-    .forEach(file => {
-        const module = require(path.join(__dirname, file));
-        result.push(...module)
-    });
-
-module.exports = result
+export default [
+    CharacterType,
+    Characteristic,
+    Complaint,
+    Item,
+    ItemCharacteristic,
+    ItemSlot,
+    ItemType,
+]

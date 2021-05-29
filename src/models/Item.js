@@ -1,6 +1,6 @@
 'use strict';
 
-const {Model} = require('sequelize');
+import {Model} from 'sequelize';
 
 module.exports = class Item extends Model {
     static init(sequelize, DataTypes) {

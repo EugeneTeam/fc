@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/serve.js",
-    "db:create": "node ./node_modules/.bin/sequelize db:create",
-    "db:migrate": "node ./node_modules/.bin/sequelize db:migrate",
-    "db:rebuild": "node ./node_modules/.bin/sequelize db:drop && node ./node_modules/.bin/sequelize db:create && node ./node_modules/.bin/sequelize db:migrate && node ./node_modules/.bin/sequelize db:seed:all",
-    "db:seed": "node ./node_modules/.bin/sequelize db:seed:all"
+    "start": "nodemon --exec babel-node ./src/serve.js",
+    "db:create": "babel-node ./node_modules/.bin/sequelize db:create",
+    "db:migrate": "babel-node ./node_modules/.bin/sequelize db:migrate",
+    "db:rebuild": "babel-node ./node_modules/.bin/sequelize db:drop && node ./node_modules/.bin/sequelize db:create && node ./node_modules/.bin/sequelize db:migrate && node ./node_modules/.bin/sequelize db:seed:all",
+    "db:seed": "babel-node ./node_modules/.bin/sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,10 @@
     "url": "https://github.com/EugeneTeam/fc/issues"
   },
   "homepage": "https://github.com/EugeneTeam/fc#readme",
+  "resolutions": {
+    "@babel/core": "7.13.15",
+    "@babel/preset-env": "7.13.15"
+  },
   "dependencies": {
     "apollo-server": "^2.22.1",
     "apollo-server-express": "^2.22.1",
@@ -43,6 +47,13 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.0",
+    "@babel/preset-env": "^7.11.0",
     "nodemon": "^2.0.7",
     "sequelize-cli": "^6.2.0"
   }

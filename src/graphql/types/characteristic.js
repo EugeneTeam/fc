@@ -1,6 +1,10 @@
 const models = require('../../models');
 const {transform, reductionToOneFormat}  = require('../../utils/converter');
 
+/**
+ * Списко характеристик которые может использовать игрок/предмет
+ * Данный модуль доступен только админу или по правам доступа
+ */
 module.exports = class Characteristic {
     static resolver() {
         return {

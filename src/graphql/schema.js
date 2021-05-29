@@ -1,15 +1,11 @@
-const {ApolloServer} = require('apollo-server-express');
-const {makeExecutableSchema} = require('graphql-tools')
-const {resolvers, typeDefs} = require('./types');
-const {GRAPHQL_ENDPOINT, GRAPHQL_SUBSCRIPTION_PATH} = require('../config/constants');
-const pubSubSingleton = require('./pubsub');
-const triggerNamesList = require('./subscriptionTriggersNames');
-const {
-    functionArgumentValidation,
-    checkUserAuthorization,
-    checkUserRights
-} = require('../utils/utils');
-const {transform} = require('../utils/converter')
+import {ApolloServer} from 'apollo-server-express'
+import {makeExecutableSchema} from 'graphql-tools'
+import {resolvers, typeDefs} from './types'
+import {GRAPHQL_ENDPOINT, GRAPHQL_SUBSCRIPTION_PATH} from '../config/constants'
+import pubSubSingleton from './pubsub'
+import triggerNamesList from './subscriptionTriggersNames'
+import {functionArgumentValidation, checkUserAuthorization, checkUserRights} from '../utils/utils'
+import {transform} from '../utils/converter'
 
 const schema = makeExecutableSchema({
     resolvers,
@@ -20,14 +16,15 @@ const selectError = error => {
     if (error.extensions && error.extensions.errors) {
         return error.extensions.errors
     }
+
     return [{
         code: 500,
         message: error.message,
-        path: error.path
+        path: error
     }]
 }
 
-module.exports = {
+export default {
     schema,
     apollo: new ApolloServer({
         typeDefs,

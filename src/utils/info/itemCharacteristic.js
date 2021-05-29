@@ -1,6 +1,6 @@
-const {itemCharacteristic} = require('../validator/validator')
+import {itemCharacteristic} from '../validator/validator'
 
-module.exports = [
+export default [
     {
         methodName: 'getItemCharacteristicsList',
         validator: null,

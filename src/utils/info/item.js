@@ -1,6 +1,6 @@
-const {item} = require('../validator/validator')
+import {item} from '../validator/validator'
 
-module.exports = [
+export default [
     {
         methodName: 'getItemById',
         validator: item({id: true}),

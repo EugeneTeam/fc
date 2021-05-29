@@ -1,7 +1,7 @@
 'use strict';
 
-const {Model} = require('sequelize');
-const {ApolloError} = require('apollo-server-express');
+import {Model} from 'sequelize';
+import {ApolloError} from 'apollo-server-express';
 
 module.exports = class Role extends Model {
     static init(sequelize, DataTypes) {

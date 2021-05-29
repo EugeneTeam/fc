@@ -1,14 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const {apollo, schema} = require('./graphql/schema');
-const {createServer} = require('http');
-const {SubscriptionServer} = require('subscriptions-transport-ws');
-const {execute, subscribe} = require('graphql');
-const {GRAPHQL_SUBSCRIPTION_PATH} = require('./config/constants');
-const pubSubSingleton = require('./graphql/pubsub');
-const triggerNamesList = require('./graphql/subscriptionTriggersNames');
+import dotEnv from 'dotenv'
+dotEnv.config()
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import Schema from './graphql/schema';
+import {createServer} from 'http';
+import {SubscriptionServer} from 'subscriptions-transport-ws';
+import {execute, subscribe} from 'graphql';
+import {GRAPHQL_SUBSCRIPTION_PATH} from './config/constants';
+import pubSubSingleton from'./graphql/pubsub';
+import triggerNamesList from './graphql/subscriptionTriggersNames';
 
 const app = express();
 
@@ -18,18 +19,18 @@ app.use(cors());
 
 app.set('port', process.env.PORT);
 
-apollo.applyMiddleware({ app });
+Schema.apollo.applyMiddleware({ app });
 
 const httpServer = createServer(app);
 
 httpServer.listen(process.env.PORT, () => {
-    console.log(`***server ready at http://localhost:${process.env.PORT}${apollo.graphqlPath}`)
-    console.log(`***subscriptions ready at ws://localhost:${process.env.PORT}${apollo.subscriptionsPath}`)
+    console.log(`***server ready at http://localhost:${process.env.PORT}${Schema.apollo.graphqlPath}`)
+    console.log(`***subscriptions ready at ws://localhost:${process.env.PORT}${Schema.apollo.subscriptionsPath}`)
     console.log(`***server start in port ${process.env.PORT}`)
     new SubscriptionServer({
         execute,
         subscribe,
-        schema,
+        schema: Schema.schema,
         onConnect: () => ({
             pubSub: pubSubSingleton.instance,
             triggers: triggerNamesList

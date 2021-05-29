@@ -1,6 +1,11 @@
 const models = require('../../models');
 const {transform, reductionToOneFormat} = require('../../utils/converter');
 
+/**
+ * Тип персонажа.
+ * От типа персонажа зависит начальные характеристики, значения прироста характеристик при повышение уровня
+ * Данный модуль доступен только админу или по правам доступа
+ */
 module.exports = class CharacterType {
     static resolver() {
         return {
@@ -15,7 +20,10 @@ module.exports = class CharacterType {
                 getCharacterTypeById: async (obj, {id}) => {
                     const characterType = await models.CharacterType.findByPk(id)
                     if (!characterType) {
-                        return transform(null, {message: `Character Type by ID ${id} not found`, code: 404});
+                        return transform(null, {
+                            message: `Character Type by ID ${id} not found`,
+                            code: 404
+                        });
                     }
                     return transform(characterType)
                 },
@@ -49,7 +57,10 @@ module.exports = class CharacterType {
                 updateCharacterType: async (obj, {id, name, description, imageUrl}) => {
                     const characterType = await models.CharacterType.findByPk(id)
                     if (!characterType) {
-                        return transform(null, {message: `Character Type by ID ${id} not found`, code: 404});
+                        return transform(null, {
+                            message: `Character Type by ID ${id} not found`,
+                            code: 404
+                        });
                     }
 
                     const isNameUsed = await models.CharacterType.findOne({
@@ -58,7 +69,10 @@ module.exports = class CharacterType {
                         }
                     })
                     if (isNameUsed) {
-                        return transform(null, {message: `Name "${name}" is used`, code: 400});
+                        return transform(null, {
+                            message: `Name "${name}" is used`,
+                            code: 400
+                        });
                     }
 
                     const updatedCharacterType = await characterType.update({
@@ -72,7 +86,10 @@ module.exports = class CharacterType {
                 removeCharacterType: async (obj, {id}) => {
                     const characterType = await models.CharacterType.findByPk(id)
                     if (!characterType) {
-                        return transform(null, {message: `Character Type by ID ${id} not found`, code: 404});
+                        return transform(null, {
+                            message: `Character Type by ID ${id} not found`,
+                            code: 404
+                        });
                     }
                     await characterType.destroy()
                     return transform(characterType)
@@ -99,23 +116,22 @@ module.exports = class CharacterType {
             }
             
             ${reductionToOneFormat('CharacterTypesList', 'GetListOfCharacterTypes')}
-            ${reductionToOneFormat('CharacterType', 'CRUCharacterType')}
-            ${reductionToOneFormat('CharacterType', 'RemoveCharacterType')}
+            ${reductionToOneFormat('CharacterType', 'CRUDCharacterType')}
         `;
     }
 
     static queryTypeDefs() {
         return `
             getCharacterTypesList(limit: Int, offset: Int): GetListOfCharacterTypes
-            getCharacterTypeById(id: Int!): CRUCharacterType
+            getCharacterTypeById(id: Int!): CRUDCharacterType
         `;
     }
 
     static mutationTypeDefs() {
         return `
-            createCharacterType(name: String, description: String, imageUrl: String): CRUCharacterType
-            updateCharacterType(name: String, description: String, imageUrl: String, id: Int!): CRUCharacterType
-            removeCharacterType(id: Int!): RemoveCharacterType
+            createCharacterType(name: String, description: String, imageUrl: String): CRUDCharacterType
+            updateCharacterType(name: String, description: String, imageUrl: String, id: Int!): CRUDCharacterType
+            removeCharacterType(id: Int!): CRUDCharacterType
         `;
     }
 }

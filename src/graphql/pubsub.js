@@ -1,6 +1,6 @@
-const {PubSub} = require('graphql-subscriptions');
+import {PubSub} from 'graphql-subscriptions'
 
-module.exports = {
+export default {
     _instance: null,
     get instance() {
         if (!this._instance) {

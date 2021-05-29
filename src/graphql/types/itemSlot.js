@@ -1,6 +1,10 @@
 const {transform, reductionToOneFormat} = require('../../utils/converter')
 const models = require('../../models')
 
+/**
+ * Слоты для предметов. Например: слот для оружия, слот для шлема ...
+ * Данный модуль доступен только админу или по правам доступа
+ */
 module.exports = class ItemSlot {
     static resolver() {
         return {
@@ -14,7 +18,10 @@ module.exports = class ItemSlot {
                 getItemSlotById: async (obj, {id}) => {
                     const itemSlot = await models.ItemSlot.findByPk(id)
                     if (!itemSlot) {
-                        return transform(null, {code: 404, message: `Item slot by ID ${id} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Item slot by ID ${id} not found`
+                        })
                     }
                     return transform(itemSlot)
                 }
@@ -23,7 +30,10 @@ module.exports = class ItemSlot {
                 createItemSlot: async (obj, {itemTypeId, imageUrl}) => {
                     const itemType = await models.ItemType.findByPk(itemTypeId)
                     if (!itemType) {
-                        return transform(null, {code: 404, message: `Item type by ID ${itemTypeId} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Item type by ID ${itemTypeId} not found`
+                        })
                     }
 
                     const itemSlot = await models.ItemSlot.findOne({
@@ -33,7 +43,10 @@ module.exports = class ItemSlot {
                         }
                     })
                     if (itemSlot) {
-                        return transform(null, {code: 400, message: `A similar item slot has already been created`})
+                        return transform(null, {
+                            code: 400,
+                            message: `A similar item slot has already been created`
+                        })
                     }
 
                     const newItemSlot = await models.ItemSlot.create({
@@ -45,7 +58,10 @@ module.exports = class ItemSlot {
                 updateItemSlot: async (obj, {id, itemTypeId, imageUrl}) => {
                     const itemType = await models.ItemType.findByPk(itemTypeId)
                     if (!itemType) {
-                        return transform(null, {code: 404, message: `Item type by ID ${itemTypeId} not found`})
+                        return transform(null, {
+                            code: 404,
+                            message: `Item type by ID ${itemTypeId} not found`
+                        })
                     }
 
                     const itemSlot = await models.ItemSlot.findOne({
@@ -55,7 +71,10 @@ module.exports = class ItemSlot {
                         }
                     })
                     if (itemSlot) {
-                        return transform(null, {code: 400, message: `A similar item slot has already been created`})
+                        return transform(null, {
+                            code: 400,
+                            message: `A similar item slot has already been created`
+                        })
                     }
 
                     const slotForUpdate = await models.ItemSlot.findByPk(id)

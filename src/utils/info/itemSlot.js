@@ -1,6 +1,6 @@
-const {itemSlot} = require('../validator/validator')
+import {itemSlot} from '../validator/validator'
 
-module.exports = [
+export default [
     {
         methodName: 'getItemSlotList',
         validator: null,

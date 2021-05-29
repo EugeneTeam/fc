@@ -7,7 +7,7 @@ module.exports = {
     await queryInterface.bulkInsert('Characteristics', [
         {name: 'agility'},
         {name: 'strength'},
-        {name: 'intelligence'},
+        {name: 'damage'},
         {name: 'armor'},
         {name: 'hp'},
     ], {});

@@ -1,6 +1,6 @@
-const {complaint} = require('../validator/validator')
+import {complaint} from '../validator/validator'
 
-module.exports = [
+export default [
     {
         methodName: 'createComplaint',
         validator: complaint,

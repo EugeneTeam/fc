@@ -1,6 +1,6 @@
-const {characterType} = require('../validator/validator')
+import {characterType} from '../validator/validator'
 
-module.exports = [
+export default [
     {
         methodName: 'getCharacterTypesList',
         validator: null,
